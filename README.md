@@ -6,11 +6,32 @@ and have them communicate with an Azure OpenAI endpoint via standard
 authentication and authorization mechanims provided by Azure's OpenAI 
 service.
 
+The project consists of two parts:
+1. The first is the Infrastructure as Code (IaC) that deploys an App Service
+with managed identity and an Azure OpenAI service with a GPT-35-Turbo model.
+It also adds the App Service's managed identity to the 
+`Cognitive Services OpenAI Contributor` role. This enables the application 
+running on App Service to invoke the OpenAI service's APIs without an API key.
+2. A Java web application that can leverage either API keys or managed
+identity to invoke the OpenAI service. If running the code locally from your
+developer workstation (or VM in Azure), you can use your Azure credentials 
+instead of an API key. You will need to ensure that your Azure credentials
+are given the same `Cognitive Services OpenAI Contributor` role and you are 
+logged in via the `az login` command.
+
 ## Running the application
+
+The `main.bicep` file under the `automation` folder contains the top-level
+functionality to deploy and configure all services in Azure. You will need
+owner permissions on the subscription and/or resource group in order to
+deploy the resources and assign users to roles (in this case, the App Service's
+managed identity to the `Cognitive Services OpenAI Contributor` role)
 
 The project is a standard Maven project. To run it from the command line,
 type `mvnw` (Windows), or `./mvnw` (Mac & Linux), then open
-http://localhost:8080 in your browser.
+http://localhost:8080 in your browser. The same project / jar file can be
+deployed to Azure App Service (see notes below as it requires the 
+`production` flag to Maven's `package` command).
 
 ## Deploying to Production
 
@@ -25,20 +46,17 @@ Once the JAR file is built, you can run it using
 
 ## Project structure
 
-- `MainLayout.java` in `src/main/java` contains the simplistic code
+- `main.bicep` in `automation` contains the top-level Infrastructure As Code
+deployment.
+- `MainLayout.java` in `src/main/java` contains the code to use the Azure 
+OpenAI service via its APIs.
 - The code is meant for testing - as it instantiates a new client connection
 on each call to the Open AI endpoint which is quite expensive. 
-- It also doesn't maintain any chat conversation history or context.
+- The code doesn't maintain any chat conversation history or context.
 
 ## Useful links
 
-- Read the documentation at [vaadin.com/docs](https://vaadin.com/docs).
-- Follow the tutorial at [vaadin.com/docs/latest/tutorial/overview](https://vaadin.com/docs/latest/tutorial/overview).
-- Create new projects at [start.vaadin.com](https://start.vaadin.com/).
-- Search UI components and their usage examples at [vaadin.com/docs/latest/components](https://vaadin.com/docs/latest/components).
-- View use case applications that demonstrate Vaadin capabilities at [vaadin.com/examples-and-demos](https://vaadin.com/examples-and-demos).
-- Build any UI without custom CSS by discovering Vaadin's set of [CSS utility classes](https://vaadin.com/docs/styling/lumo/utility-classes). 
-- Find a collection of solutions to common use cases at [cookbook.vaadin.com](https://cookbook.vaadin.com/).
-- Find add-ons at [vaadin.com/directory](https://vaadin.com/directory).
-- Ask questions on [Stack Overflow](https://stackoverflow.com/questions/tagged/vaadin) or join our [Discord channel](https://discord.gg/MYFq5RTbBn).
-- Report issues, create pull requests in [GitHub](https://github.com/vaadin).
+- Read [Quickstart: Get started generating text using Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-services/openai/quickstart?tabs=command-line&pivots=programming-language-java).
+- Read [Role-based access control for Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/role-based-access-control).
+- Automation [Microsoft.CognitiveServices accounts](https://learn.microsoft.com/en-us/azure/templates/microsoft.cognitiveservices/accounts?pivots=deployment-language-bicep).
+- Read [Authenticate Azure-hosted Java applications](https://learn.microsoft.com/en-us/azure/developer/java/sdk/identity-azure-hosted-auth)
