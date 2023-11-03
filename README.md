@@ -3,11 +3,11 @@
 This project can be used as a starting point to validate how to deploy
 applications on Azure Web Apps (e.g. App Service or any another service) 
 and have them communicate with an Azure OpenAI endpoint via standard 
-authentication and authorization mechanims provided by Azure's OpenAI 
+authentication and authorization mechanisms provided by Azure's OpenAI 
 service.
 
 The project consists of two parts:
-1. The first is the Infrastructure as Code (IaC) that deploys an App Service
+1. The first part is Infrastructure as Code (IaC) that deploys an App Service
 with managed identity and an Azure OpenAI service with a GPT-35-Turbo model.
 It also adds the App Service's managed identity to the 
 `Cognitive Services OpenAI Contributor` role. This enables the application 
@@ -33,7 +33,7 @@ http://localhost:8080 in your browser. The same project / jar file can be
 deployed to Azure App Service (see notes below as it requires the 
 `production` flag to Maven's `package` command).
 
-## Deploying to Production
+## Deploying to Production or Azure App Service
 
 To create a production build, call `mvnw clean package -Pproduction` (Windows),
 or `./mvnw clean package -Pproduction` (Mac & Linux).
@@ -43,6 +43,11 @@ build completes.
 
 Once the JAR file is built, you can run it using
 `java -jar target/azure-openai-example-1.0-SNAPSHOT.jar`
+
+You can also deploy this jar file to Azure App Service. It does require
+that you set a `PORT` application setting to `80` under the App Service's
+`Configuration` tab. Note that the `PORT` application setting value in Azure's
+App Service is `80` and not `8080`. 
 
 ## Project structure
 
