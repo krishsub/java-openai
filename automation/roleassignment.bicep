@@ -11,7 +11,7 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   }
 }
 
-resource oai 'Microsoft.CognitiveServices/accounts@2023-05-01' existing = {
+resource oai 'Microsoft.CognitiveServices/accounts@2023-10-01-preview' existing = {
   name: openAiName
 }
 
